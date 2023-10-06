@@ -70,12 +70,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           invoke requirements
-      - name: Notify Slack On Failure Status
+      - name: Notify Slack On Failure
         if: always()
         uses: rtCamp/action-slack-notify@v2
         with:
           status: ${{ job.status }}
           notify_when: 'failure'
+          notification_title: '{workflow} job {job.name} has {status_message}'
+          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          footer: 'Linked to Repo <{repo_url}|{repo}>'
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -118,5 +121,8 @@ jobs:
         with:
           status: ${{ job.status }}
           notify_when: 'failure'
+          notification_title: '{workflow} job {job.name} has {status_message}'
+          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          footer: 'Linked to Repo <{repo_url}|{repo}>'
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
