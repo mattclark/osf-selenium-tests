@@ -1,3 +1,4 @@
+glbufkuv
 name: Nightly Core Functionality Tests
 
 on:
@@ -69,6 +70,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           invoke requirements
+      - name: Notify Slack On Failure Status
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          status: ${{ job.status }}
+          notify_when: 'failure'
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
 
   core_functionality_test:
     name: Core Functionality tests (${{ matrix.browser }})
@@ -102,3 +112,11 @@ jobs:
           TEST_BUILD: ${{ matrix.browser }}
         run: |
           invoke test_core_functionality_part_two
+      - name: Notify Slack On Failure Status
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          status: ${{ job.status }}
+          notify_when: 'failure'
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
